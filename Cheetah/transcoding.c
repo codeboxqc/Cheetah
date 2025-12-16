@@ -502,8 +502,14 @@ static int open_output_file(const char* filename)
                 return ret;
             }
 
-            if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
+            // Older FFmpeg versions require the encoder context to have this flag set
+            // for WebM, even if the format context flag (AVFMT_GLOBALHEADER) is not set.
+            if (strcmp(g_output_format, "webm") == 0) {
                 enc_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+            }
+            else if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER) {
+                enc_ctx->flags |= AV_CODEC_FLAG_GLOBAL_HEADER;
+            }
 
             ret = avcodec_open2(enc_ctx, encoder, NULL);
             if (ret < 0) {
