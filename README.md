@@ -30,7 +30,8 @@ https://github.com/user-attachments/assets/e593285b-8c98-4969-ad13-76506906b228
   </div>
 
 
-
+X64 
+https://github.com/codeboxqc/Cheetah/releases/download/1.0/Cheetah.7z
 
 
 ## 📜 GitHub/GPL Compliance Verification
