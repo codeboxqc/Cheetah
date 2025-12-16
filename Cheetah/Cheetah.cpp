@@ -26,6 +26,7 @@
  License-safe FFmpeg feature set (vcpkg)
 
  vcpkg install ffmpeg[webp,nvcodec,amf,qsv,gpl]:x64-windows
+ vcpkg install ffmpeg[vpx,opus,vorbis,webp,nvcodec,amf,qsv,gpl]:x64-windows --recurse
 
 Goal
 ✔ Public redistribution allowed
@@ -250,7 +251,7 @@ int statusled = 0;
 typedef enum {
     FORMAT_MP4 = 1,   // Universal - works everywhere
     FORMAT_MKV = 2,   // High quality archival
-    FORMAT_WEBP = 3,  // Web optimized
+    FORMAT_WEBM = 3,  // Web optimized
     FORMAT_MOV = 4    // Apple/editing workflow
 } OutputFormat;
 
@@ -273,7 +274,7 @@ FormatButton g_formatButtons[] = {
 
     { {175, 570, 207 , 600 }, L"MP4",  FORMAT_MP4,  L".mp4" },
     { {220, 568, 252 , 598}, L"MKV",  FORMAT_MKV,  L".mkv" },
-    { {265, 564, 295 , 594}, L"WebP", FORMAT_WEBP, L".webp" },
+    { {265, 564, 295 , 594}, L"WebM", FORMAT_WEBM, L".WebM" },
     { {308, 560, 340,  590}, L"MOV",  FORMAT_MOV,  L".mov" }
 };
 
@@ -282,7 +283,7 @@ const wchar_t* GetFormatExtension(OutputFormat format) {
     switch (format) {
     case FORMAT_MP4:  return L".mp4";
     case FORMAT_MKV:  return L".mkv";
-    case FORMAT_WEBP: return L".webp";
+    case FORMAT_WEBM: return L".WebM";
     case FORMAT_MOV:  return L".mov";
     default:          return L".mp4";
     }
@@ -293,7 +294,7 @@ const char* GetFFmpegFormatName(OutputFormat format) {
     switch (format) {
     case FORMAT_MP4:  return "mp4";
     case FORMAT_MKV:  return "matroska";
-    case FORMAT_WEBP: return "webp";
+    case FORMAT_WEBM: return "webm";
     case FORMAT_MOV:  return "mov";
     default:          return "mp4";
     }
