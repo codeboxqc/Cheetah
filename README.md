@@ -6,7 +6,30 @@
 ![Portable](https://img.shields.io/badge/portable-yes-green.svg)
 ![Powered by FFmpeg](https://img.shields.io/badge/powered%20by-FFmpeg-orange)
 
+![GPLv3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)
+![GitHub Compliant](https://img.shields.io/badge/GitHub-GPL%20Compliant-green.svg)
+![FFmpeg Safe](https://img.shields.io/badge/FFmpeg-License--Safe-orange.svg)
+
 A fast, animated, hardware-accelerated video converter for Windows with a unique visual interface.
+
+
+## 📜 GitHub/GPL Compliance Verification
+
+This project uses a **verified GPLv3-compliant FFmpeg configuration** ensuring safe distribution on GitHub.
+
+### ✅ License-Safe FFmpeg Build
+```bash
+# Installation command used (NO nonfree components):
+vcpkg install ffmpeg[webp,nvcodec,amf,qsv,gpl,vpx,opus,vorbis]:x64-windows --recurse
+
+# Verification commands:
+ffmpeg -L | findstr "nonfree"           # Returns empty ✓
+ffmpeg -buildconf | findstr "gpl"       # Shows --enable-gpl ✓
+ffmpeg -encoders | findstr "libfdk_aac" # Returns empty ✓
+
+![2](https://github.com/user-attachments/assets/eaf9a62d-9ebf-4d36-b373-ef367a2d7a68)
+
+
 
 ## ✨ Features
 
@@ -16,10 +39,21 @@ A fast, animated, hardware-accelerated video converter for Windows with a unique
 - **Portable Design** - Single executable, no installation required
 - **License-Safe** - GPLv3 compliant, safe for public redistribution
 
+- 
+![1](https://github.com/user-attachments/assets/622c551e-e73c-44e8-a463-890241672df7)
+ 
+
 ### 📁 Supported Formats
 - **Output Containers**: MP4, MKV, WebM, MOV
 - **Video Codecs**: H.264, H.265/HEVC, VP8/VP9, AV1 (GPU-dependent), WebP (animated)
 - **Audio Codecs**: AAC, MP3, Opus, Vorbis, FLAC, PCM/WAV
+
+- 
+
+https://github.com/user-attachments/assets/c1870619-0598-464f-bedc-dda0c4a6bbed
+
+
+
 
 ### 🎨 Unique Visual Interface
 - Animated progress wheels and blinking LEDs
