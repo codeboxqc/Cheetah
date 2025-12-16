@@ -1,0 +1,27 @@
+Project License Notice
+----------------------
+
+This project uses FFmpeg built with GPL-enabled components via vcpkg:
+[vpx, opus, vorbis, webp, nvcodec, amf, qsv, gpl]
+
+Accordingly, this project is licensed under the GNU General Public License,
+Version 2 (GPL v2), or (at your option) any later version.
+
+You may redistribute and/or modify this project under the terms of the GPL.
+For details, see the full license text included below.
+
+---
+
+GNU GENERAL PUBLIC LICENSE
+Version 2, June 1991
+https://www.gnu.org/licenses/old-licenses/gpl-2.0.html
+
+---
+
+Additional Information
+----------------------
+- FFmpeg source code is available at: https://ffmpeg.org/download.html
+- This project links against FFmpeg libraries built with GPL components.
+- In compliance with GPL, the complete corresponding source code of this project
+  must be made available to recipients of the binaries.
+- For FFmpeg’s official licensing details, see: https://ffmpeg.org/legal.html
