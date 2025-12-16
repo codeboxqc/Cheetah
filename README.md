@@ -6,7 +6,7 @@
 ![Portable](https://img.shields.io/badge/portable-yes-green.svg)
 ![Powered by FFmpeg](https://img.shields.io/badge/powered%20by-FFmpeg-orange)
 
-![GPLv3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)
+
 ![GitHub Compliant](https://img.shields.io/badge/GitHub-GPL%20Compliant-green.svg)
 ![FFmpeg Safe](https://img.shields.io/badge/FFmpeg-License--Safe-orange.svg)
 
