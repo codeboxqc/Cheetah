@@ -340,6 +340,7 @@ static int configure_video_encoder(AVCodecContext* enc_ctx, AVCodecContext* dec_
 
     // FIXED: Call quality configuration functions with correct signature (only 2 params)
     if (strcmp(encoder->name, "libwebp") == 0) {
+        enc_ctx->pix_fmt = AV_PIX_FMT_YUV420P;
         av_opt_set_int(enc_ctx->priv_data, "lossless", 0, 0);
         av_opt_set_int(enc_ctx->priv_data, "quality", 75, 0);
     }
@@ -544,6 +545,9 @@ static int open_output_file(const char* filename)
         av_log(NULL, AV_LOG_ERROR, "Could not create output context\n");
         return AVERROR_UNKNOWN;
     }
+
+    if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
+        ofmt_ctx->flags |= AVFMT_FLAG_GLOBAL_HEADER;
 
 
 
