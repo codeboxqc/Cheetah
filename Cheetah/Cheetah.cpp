@@ -1,4 +1,5 @@
 ﻿/*
+******************  This software uses FFmpeg licensed under the GPL.******************************
  * Copyright [2025] [codeboxqc]
  *
  * This file is part of  cheetah .
@@ -19,10 +20,100 @@
 
 
 
+
+
+/*
+ License-safe FFmpeg feature set (vcpkg)
+
+ vcpkg install ffmpeg[webp,nvcodec,amf,qsv,gpl]:x64-windows
+
+Goal
+✔ Public redistribution allowed
+✔ NVIDIA / AMD / Intel GPU acceleration
+✔ WebP(animated WebP)
+✔ Common modern codecs
+✔ Safe for GitHub& commercial use
+🔹 Video codecs (encode + decode)
+H.264 (x264 + GPU)
+H.265 / HEVC (x265 + GPU)
+AV1 (GPU where available)
+VP8 / VP9
+MPEG-2 / MPEG-4
+WebP (animated)
+🔹 Audio codecs
+AAC (native FFmpeg encoder)
+MP3
+Opus
+Vorbis
+FLAC
+WAV / PCM
+🔹 Containers
+MP4
+MKV
+MOV
+AVI
+WEBM
+
+C:\vcpkg>vcpkg list | findstr ffmpeg
+C:\vcpkg>vcpkg list | findstr ffmpeg
+ffmpeg:x64-windows                                7.1.2#3             A library to decode, encode, transcode, mux, dem...
+ffmpeg[amf]:x64-windows                                               AMD AMF codec support
+ffmpeg[avcodec]:x64-windows                                           Build the avcodec library
+ffmpeg[avdevice]:x64-windows                                          Build the avdevice library
+ffmpeg[avfilter]:x64-windows                                          Build the avfilter library
+ffmpeg[avformat]:x64-windows                                          Build the avformat library
+ffmpeg[gpl]:x64-windows                                               Allow use of GPL code, the resulting libs and bi...
+ffmpeg[nvcodec]:x64-windows                                           Nvidia video decoding/encoding acceleration
+ffmpeg[qsv]:x64-windows                                               Intel QSV Codec
+ffmpeg[swresample]:x64-windows                                        Build the swresample library
+ffmpeg[swscale]:x64-windows                                           Build the swscale library
+ffmpeg[webp]:x64-windows                                              WebP encoding via libwebp
+*/
+ 
+
+
+
+
+
+//☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️
+/*
+License Not safe FFmpeg pivate use only 
+ What we must NOT use (license reasons)
+Feature	Reason
+nonfree	Prohibits redistribution
+libfdk - aac	Non - free
+Some Dolby encoders	Non - free
+
+vcpkg install ffmpeg[webp,amf,nvcodec,qsv,gpl,nonfree]:x64-windows --recurse //personal use only
+
+NO Public redistribution allowed
+NO NVIDIA / AMD / Intel GPU acceleration
+NO WebP(animated WebP)
+NO Common modern codecs
+NO Safe for GitHub& commercial use
+NO If you modify FFmpeg
+You must publish your changes
+NO You CAN sell your app
+NO You CAN publish binaries
+NO You CAN host on GitHub
+ */
+ //☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️
+
+
+// 
+//vcpkg list | findstr webp
+//C:\vcpkg\installed\x64-windows\tools\ffmpeg\ffmpeg.exe -hwaccels
+// Verify license safety
+//C:\vcpkg\installed\x64-windows\tools\ffmpeg\ffmpeg.exe -L
+//You should NOT see: nonfree libfdk_aac
+
+//ffmpeg -buildconf
+
+
 #define _CRT_SECURE_NO_WARNINGS
 #define WIN32_LEAN_AND_MEAN
 
-//☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️🦠☣️☠️
+
 
 // Add these macros at the top of your file, after includes if not already defined
 #ifndef GET_X_LPARAM
@@ -56,11 +147,11 @@
 #pragma comment(lib, "gdiplus.lib")
 #pragma comment(lib, "comctl32.lib")
 #pragma comment(lib, "User32.lib")
- 
+
 
 #define WM_USER_PROGRESS (WM_USER + 100)
 
- 
+
 
 struct ProgressData {
     int64_t currentFrame = 0;
@@ -92,17 +183,17 @@ struct EncodingButton {
 
 // Define 4 encoding option buttons
 EncodingButton g_encodingButtons[] = {
-    { {373, 310, 34+376, 340}, L"H.265\nArch.", 1 },
-    { {373, 360, 34+376, 390}, L"H.264\nHigh", 2 },
-    { {373, 410, 34+376, 440}, L"H.264\nBalance", 3 },
-    { {373, 460, 34+376, 490}, L"H.264\nSmall", 4 }
+    { {373, 310, 34 + 376, 340}, L"H.265\nArch.", 1 },
+    { {373, 360, 34 + 376, 390}, L"H.264\nHigh", 2 },
+    { {373, 410, 34 + 376, 440}, L"H.264\nBalance", 3 },
+    { {373, 460, 34 + 376, 490}, L"H.264\nSmall", 4 }
 };
 /////////////////////////////////////////////////////////
 
 
 
 // Design size of your interface.png
-const int DESIGN_X = 450+30;
+const int DESIGN_X = 450 + 30;
 const int DESIGN_Y = 650;
 
 #define TIMER_ID 1
@@ -159,7 +250,7 @@ int statusled = 0;
 typedef enum {
     FORMAT_MP4 = 1,   // Universal - works everywhere
     FORMAT_MKV = 2,   // High quality archival
-    FORMAT_WEBM = 3,  // Web optimized
+    FORMAT_WEBP = 3,  // Web optimized
     FORMAT_MOV = 4    // Apple/editing workflow
 } OutputFormat;
 
@@ -177,12 +268,12 @@ struct FormatButton {
 FormatButton g_formatButtons[] = {
     //{ {373, 510, 407, 540}, L"MP4",  FORMAT_MP4,  L".mp4" },
    // { {410, 510, 444, 540}, L"MKV",  FORMAT_MKV,  L".mkv" },
-   // { {373, 543, 407, 573}, L"WebM", FORMAT_WEBM, L".webm" },
+   // { {373, 543, 407, 573}, L"WebP", FORMAT_WEBP, L".webp" },
    // { {410, 543, 444, 573}, L"MOV",  FORMAT_MOV,  L".mov" }
 
     { {175, 570, 207 , 600 }, L"MP4",  FORMAT_MP4,  L".mp4" },
     { {220, 568, 252 , 598}, L"MKV",  FORMAT_MKV,  L".mkv" },
-    { {265, 564, 295 , 594}, L"WebM", FORMAT_WEBM, L".webm" },
+    { {265, 564, 295 , 594}, L"WebP", FORMAT_WEBP, L".webp" },
     { {308, 560, 340,  590}, L"MOV",  FORMAT_MOV,  L".mov" }
 };
 
@@ -191,7 +282,7 @@ const wchar_t* GetFormatExtension(OutputFormat format) {
     switch (format) {
     case FORMAT_MP4:  return L".mp4";
     case FORMAT_MKV:  return L".mkv";
-    case FORMAT_WEBM: return L".webm";
+    case FORMAT_WEBP: return L".webp";
     case FORMAT_MOV:  return L".mov";
     default:          return L".mp4";
     }
@@ -202,7 +293,7 @@ const char* GetFFmpegFormatName(OutputFormat format) {
     switch (format) {
     case FORMAT_MP4:  return "mp4";
     case FORMAT_MKV:  return "matroska";
-    case FORMAT_WEBM: return "webm";
+    case FORMAT_WEBP: return "webp";
     case FORMAT_MOV:  return "mov";
     default:          return "mp4";
     }
@@ -242,7 +333,7 @@ void DrawFormatButton(HDC hdc, FormatButton& btn, bool selected)
 }
 
 
- 
+
 // ====================== Helper Functions ======================
 
 extern "C" void progress_callback(int64_t current, int64_t total,
@@ -647,7 +738,7 @@ void DrawInvertedImage(Graphics& graphics, Image* pImage, float x, float y, int 
 void DrawEncodingButton(HDC hdc, EncodingButton& btn, bool selected)
 {
     // Create pen and brush
-    HPEN pen = CreatePen(PS_SOLID, 2, selected ? RGB(254, 244, 100) : RGB(255,  80,  80));
+    HPEN pen = CreatePen(PS_SOLID, 2, selected ? RGB(254, 244, 100) : RGB(255, 80, 80));
     HBRUSH brush = CreateSolidBrush(selected ? RGB(233, 157, 53) : RGB(146, 83, 82));
 
     HPEN oldPen = (HPEN)SelectObject(hdc, pen);
@@ -671,7 +762,7 @@ void DrawEncodingButton(HDC hdc, EncodingButton& btn, bool selected)
 
     DrawTextW(hdc, btn.label, -1, &btn.rect, DT_CENTER | DT_VCENTER | DT_WORDBREAK);
 
-     
+
     SetTextColor(hdc, RGB(0, 0, 0));
     SetBkMode(hdc, TRANSPARENT);
 
@@ -703,19 +794,19 @@ void DrawEncodingButton(HDC hdc, EncodingButton& btn, bool selected)
 LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
     RECT buttonRect = { 404, 10, 447, 53 };
-    RECT ROAD1 = { 6, 33, 6+234, 33+238};
-    RECT ROAD2 = { 236, 46, 236+233, 46+223 };
+    RECT ROAD1 = { 6, 33, 6 + 234, 33 + 238 };
+    RECT ROAD2 = { 236, 46, 236 + 233, 46 + 223 };
 
-    RECT LED1 = { 89,  531, 91+14,  531+13 };
-    RECT LED2 = { 120, 530, 121+14, 530+13 };
+    RECT LED1 = { 89,  531, 91 + 14,  531 + 13 };
+    RECT LED2 = { 120, 530, 121 + 14, 530 + 13 };
 
     RECT MLED1 = { 78,  428, 78 + 8,  428 + 8 };
     RECT MLED2 = { 92, 427, 92 + 8, 427 + 8 };
 
 
 
- 
-  
+
+
 
     switch (msg)
     {
@@ -741,14 +832,14 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             InvalidateRect(hwnd, &LED2, TRUE);
             statusled = !statusled;
 
-            
 
-          
+
+
         }
         else if (wParam == TIMER_ID) {
 
 
-            
+
 
 
 
@@ -777,7 +868,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
 
-     
+
 
 
     case WM_USER_PROGRESS:
@@ -791,7 +882,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
     case WM_CREATE:
-         
+
         DragAcceptFiles(hwnd, TRUE);
 
         SetTimer(hwnd, TIMER_ID, 33, nullptr);
@@ -809,7 +900,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         LoadPNGImage(hwnd, IDB_PNG8, &mled2);
 
 
-      
+
 
 
 
@@ -836,320 +927,177 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
         return 0;
 
 
-/*
     case WM_DROPFILES:
-{
-    HDROP hDrop = (HDROP)wParam;
-    wchar_t szFile[MAX_PATH] = {};
-
-    if (DragQueryFileW(hDrop, 0, szFile, MAX_PATH) == 0) {
-        DragFinish(hDrop);
-        return 0;
-    }
-    DragFinish(hDrop);
-
-    std::wstring input = szFile;
-    size_t dotPos = input.find_last_of(L'.');
-    
-    // UPDATED: Use selected format extension
-    std::wstring baseFilename = (dotPos != std::wstring::npos) ?
-        input.substr(0, dotPos) : input;
-    
-    std::wstring output = baseFilename + L"_converted" + GetFormatExtension(g_selectedFormat);
-
-    SetStatus(L"Starting conversion...\n" + input);
-    InvalidateRect(hwnd, nullptr, TRUE);
-
-    auto input_heap = std::make_unique<std::wstring>(input);
-    auto output_heap = std::make_unique<std::wstring>(output);
-
-    std::thread([hwnd, 
-                 input_ptr = input_heap.release(), 
-                 output_ptr = output_heap.release()]() mutable
     {
-        std::unique_ptr<std::wstring> input_heap(input_ptr);
-        std::unique_ptr<std::wstring> output_heap(output_ptr);
+        HDROP hDrop = (HDROP)wParam;
+        wchar_t szFile[MAX_PATH] = {};
 
-        {
-            std::lock_guard<std::mutex> lock(g_progressMutex);
-            g_progress = ProgressData();
-            g_progress.isEncoding = true;
+        if (DragQueryFileW(hDrop, 0, szFile, MAX_PATH) == 0) {
+            DragFinish(hDrop);
+            return 0;
         }
 
-        set_progress_callback(progress_callback);
+        DragFinish(hDrop);
 
-        auto to_utf8 = [](const std::wstring& wstr) -> std::string {
-            if (wstr.empty()) return {};
-            int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-            std::string str(len - 1, 0);
-            WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], len, nullptr, nullptr);
-            return str;
+        std::wstring input = szFile;
+
+        // SIMPLE WebP check without std::transform
+        std::wstring input_lower = input;
+        // Manually convert to lowercase
+        for (wchar_t& c : input_lower) {
+            c = towlower(c);
+        }
+
+        // Check for other image formats that might cause issues
+        const wchar_t* image_extensions[] = {
+            L".png", L".jpg", L".jpeg", L".bmp", L".gif",
+            L".tiff", L".tif", L".ico", L".svg", NULL
         };
 
-        std::string input_utf8 = to_utf8(*input_heap);
-        std::string output_utf8 = to_utf8(*output_heap);
-        std::string prog = "transcode";
+        for (int i = 0; image_extensions[i]; i++) {
+            if (input_lower.find(image_extensions[i]) != std::wstring::npos) {
+                SetStatus(L"⚠ This is an IMAGE file\n\n"
+                    L"Cheetah converts VIDEO files\n"
+                    L"Please drop a video file instead");
+                InvalidateRect(hwnd, nullptr, TRUE);
+                return 0;
+            }
+        }
 
-        char* argv[3] = { &prog[0], &input_utf8[0], &output_utf8[0] };
-
-        const wchar_t* optionDesc[] = {
-            L"Unknown",
-            L"H.265 Archive", L"H.264 High Quality",
-            L"H.264 Balanced", L"H.264 Small"
+        // Check for unsupported video formats
+        const wchar_t* unsupported_extensions[] = {
+            L".avi", L".flv", L".swf", L".rm", L".rmvb",
+            L".vob", L".ts", L".m2ts", NULL
         };
 
-        const wchar_t* formatDesc[] = {
-            L"Unknown",
-            L"MP4 (Universal)", L"MKV (High Quality)",
-            L"WebM (Web)", L"MOV (Apple/Editing)"
-        };
-
-        std::wstring statusMsg = L"Encoding: ";
-        statusMsg += optionDesc[g_selectedEncodingOption];
-        statusMsg += L"\nFormat: ";
-        statusMsg += formatDesc[g_selectedFormat];
-        statusMsg += L"\n\n";
-        statusMsg += *input_heap;
-
-        SetStatus(statusMsg);
-        if (g_windowAlive) PostMessage(hwnd, WM_USER + 1, 0, 0);
-
-        set_encoding_option(g_selectedEncodingOption);
-
-        DWORD exceptionCode = 0;
-        int result = TranscodeWithExceptionHandling(3, argv, &exceptionCode);
-
-        if (exceptionCode != 0) {
-            std::wstring name;
-            switch (exceptionCode) {
-                case 0xC0000005: name = L"ACCESS VIOLATION"; break;
-                case 0xC0000094: name = L"DIVISION BY ZERO"; break;
-                case 0xC000001D: name = L"ILLEGAL INSTRUCTION"; break;
-                case 0xC00000FD: name = L"STACK OVERFLOW"; break;
-                case 0xC0000409: name = L"BUFFER OVERRUN"; break;
-                default: name = L"UNKNOWN EXCEPTION"; break;
-            }
-            SetStatus(L"✗ CRASHED!\n" + name + L"\nCode: 0x" + 
-                     std::to_wstring(exceptionCode) + L"\n\nCheck cheetah.log");
-        }
-        else if (result == 0) {
-            HANDLE hFile = CreateFileW(output_heap->c_str(), GENERIC_READ, FILE_SHARE_READ,
-                nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-            if (hFile != INVALID_HANDLE_VALUE) {
-                LARGE_INTEGER size{};
-                GetFileSizeEx(hFile, &size);
-                CloseHandle(hFile);
-
-                if (size.QuadPart < 10000)
-                    SetStatus(L"⚠ Small file (" + std::to_wstring(size.QuadPart) + L" bytes)");
-                else
-                    SetStatus(L"✓ Success!\n\n" + *output_heap + 
-                             L"\nSize: " + std::to_wstring(size.QuadPart / 1024) + L" KB");
-            }
-            else {
-                SetStatus(L"✗ Output file not created");
+        for (int i = 0; unsupported_extensions[i]; i++) {
+            if (input_lower.find(unsupported_extensions[i]) != std::wstring::npos) {
+                SetStatus(L" Format may not work well\n\n"
+                    L"Best supported:\n"
+                    L"• MP4, MKV, MOV, WebP\n\n"
+                    L"Try converting with another tool first");
+                InvalidateRect(hwnd, nullptr, TRUE);
+                // Don't return - let it try anyway
             }
         }
-        else {
-            SetStatus(L"✗ Failed (code " + std::to_wstring(result) + L")");
-        }
 
-        {
-            std::lock_guard<std::mutex> lock(g_progressMutex);
-            g_progress.isEncoding = false;
-        }
+        size_t dotPos = input.find_last_of(L'.');
 
-        if (g_windowAlive) PostMessage(hwnd, WM_USER + 1, 0, 0);
+        // UPDATED: Use selected format extension
+        std::wstring baseFilename = (dotPos != std::wstring::npos) ?
+            input.substr(0, dotPos) : input;
 
-    }).detach();
+        std::wstring output = baseFilename + L"_converted" + GetFormatExtension(g_selectedFormat);
 
-    return 0;
-}
-*/
+        SetStatus(L"Starting conversion...\n" + input);
+        InvalidateRect(hwnd, nullptr, TRUE);
 
- case WM_DROPFILES:
- {
-     HDROP hDrop = (HDROP)wParam;
-     wchar_t szFile[MAX_PATH] = {};
+        auto input_heap = std::make_unique<std::wstring>(input);
+        auto output_heap = std::make_unique<std::wstring>(output);
 
-     if (DragQueryFileW(hDrop, 0, szFile, MAX_PATH) == 0) {
-         DragFinish(hDrop);
-         return 0;
-     }
-
-     DragFinish(hDrop);
-
-     std::wstring input = szFile;
-
-     // SIMPLE WebP check without std::transform
-     std::wstring input_lower = input;
-     // Manually convert to lowercase
-     for (wchar_t& c : input_lower) {
-         c = towlower(c);
-     }
-
-     // Check if it's WebP (image format, not video)
-     if (input_lower.find(L".webp") != std::wstring::npos ||
-         input_lower.find(L".wep") != std::wstring::npos) {
-         SetStatus(L"⚠ WebP is an IMAGE format\n\n"
-             L"Please use:\n"
-             L"• MP4, MKV, AVI for video\n"
-             L"• PNG, JPEG for images\n\n"
-             L"Drop a video file instead");
-         InvalidateRect(hwnd, nullptr, TRUE);
-         return 0;
-     }
-
-     // Check for other image formats that might cause issues
-     const wchar_t* image_extensions[] = {
-         L".png", L".jpg", L".jpeg", L".bmp", L".gif",
-         L".tiff", L".tif", L".ico", L".svg", NULL
-     };
-
-     for (int i = 0; image_extensions[i]; i++) {
-         if (input_lower.find(image_extensions[i]) != std::wstring::npos) {
-             SetStatus(L"⚠ This is an IMAGE file\n\n"
-                 L"Cheetah converts VIDEO files\n"
-                 L"Please drop a video file instead");
-             InvalidateRect(hwnd, nullptr, TRUE);
-             return 0;
-         }
-     }
-
-     // Check for unsupported video formats
-     const wchar_t* unsupported_extensions[] = {
-         L".avi", L".flv", L".swf", L".rm", L".rmvb",
-         L".vob", L".ts", L".m2ts", NULL
-     };
-
-     for (int i = 0; unsupported_extensions[i]; i++) {
-         if (input_lower.find(unsupported_extensions[i]) != std::wstring::npos) {
-             SetStatus(L" Format may not work well\n\n"
-                 L"Best supported:\n"
-                 L"• MP4, MKV, MOV, WebM\n\n"
-                 L"Try converting with another tool first");
-             InvalidateRect(hwnd, nullptr, TRUE);
-             // Don't return - let it try anyway
-         }
-     }
-
-     size_t dotPos = input.find_last_of(L'.');
-
-    // UPDATED: Use selected format extension
-    std::wstring baseFilename = (dotPos != std::wstring::npos) ?
-        input.substr(0, dotPos) : input;
-
-    std::wstring output = baseFilename + L"_converted" + GetFormatExtension(g_selectedFormat);
-
-    SetStatus(L"Starting conversion...\n" + input);
-    InvalidateRect(hwnd, nullptr, TRUE);
-
-    auto input_heap = std::make_unique<std::wstring>(input);
-    auto output_heap = std::make_unique<std::wstring>(output);
-
-    std::thread([hwnd,
-        input_ptr = input_heap.release(),
-        output_ptr = output_heap.release()]() mutable
-        {
-            std::unique_ptr<std::wstring> input_heap(input_ptr);
-            std::unique_ptr<std::wstring> output_heap(output_ptr);
-
+        std::thread([hwnd,
+            input_ptr = input_heap.release(),
+            output_ptr = output_heap.release()]() mutable
             {
-                std::lock_guard<std::mutex> lock(g_progressMutex);
-                g_progress = ProgressData();
-                g_progress.isEncoding = true;
-            }
+                std::unique_ptr<std::wstring> input_heap(input_ptr);
+                std::unique_ptr<std::wstring> output_heap(output_ptr);
 
-            set_progress_callback(progress_callback);
+                {
+                    std::lock_guard<std::mutex> lock(g_progressMutex);
+                    g_progress = ProgressData();
+                    g_progress.isEncoding = true;
+                }
 
-            auto to_utf8 = [](const std::wstring& wstr) -> std::string {
-                if (wstr.empty()) return {};
-                int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
-                std::string str(len - 1, 0);
-                WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], len, nullptr, nullptr);
-                return str;
+                set_progress_callback(progress_callback);
+
+                auto to_utf8 = [](const std::wstring& wstr) -> std::string {
+                    if (wstr.empty()) return {};
+                    int len = WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, nullptr, 0, nullptr, nullptr);
+                    std::string str(len - 1, 0);
+                    WideCharToMultiByte(CP_UTF8, 0, wstr.c_str(), -1, &str[0], len, nullptr, nullptr);
+                    return str;
+                    };
+
+                std::string input_utf8 = to_utf8(*input_heap);
+                std::string output_utf8 = to_utf8(*output_heap);
+                std::string prog = "transcode";
+
+                char* argv[3] = { &prog[0], &input_utf8[0], &output_utf8[0] };
+
+                const wchar_t* optionDesc[] = {
+                    L"Unknown",
+                    L"H.265 Archive", L"H.264 High Quality",
+                    L"H.264 Balanced", L"H.264 Small"
                 };
 
-            std::string input_utf8 = to_utf8(*input_heap);
-            std::string output_utf8 = to_utf8(*output_heap);
-            std::string prog = "transcode";
+                const wchar_t* formatDesc[] = {
+                    L"Unknown",
+                    L"MP4 (Universal)", L"MKV (High Quality)",
+                    L"WebP (Web)", L"MOV (Apple/Editing)"
+                };
 
-            char* argv[3] = { &prog[0], &input_utf8[0], &output_utf8[0] };
+                std::wstring statusMsg = L"Encoding: ";
+                statusMsg += optionDesc[g_selectedEncodingOption];
+                statusMsg += L"\nFormat: ";
+                statusMsg += formatDesc[g_selectedFormat];
+                statusMsg += L"\n\n";
+                statusMsg += *input_heap;
 
-            const wchar_t* optionDesc[] = {
-                L"Unknown",
-                L"H.265 Archive", L"H.264 High Quality",
-                L"H.264 Balanced", L"H.264 Small"
-            };
+                SetStatus(statusMsg);
+                if (g_windowAlive) PostMessage(hwnd, WM_USER + 1, 0, 0);
 
-            const wchar_t* formatDesc[] = {
-                L"Unknown",
-                L"MP4 (Universal)", L"MKV (High Quality)",
-                L"WebM (Web)", L"MOV (Apple/Editing)"
-            };
+                set_encoding_option(g_selectedEncodingOption);
+                set_output_format(g_selectedFormat);
 
-            std::wstring statusMsg = L"Encoding: ";
-            statusMsg += optionDesc[g_selectedEncodingOption];
-            statusMsg += L"\nFormat: ";
-            statusMsg += formatDesc[g_selectedFormat];
-            statusMsg += L"\n\n";
-            statusMsg += *input_heap;
+                DWORD exceptionCode = 0;
+                int result = TranscodeWithExceptionHandling(3, argv, &exceptionCode);
 
-            SetStatus(statusMsg);
-            if (g_windowAlive) PostMessage(hwnd, WM_USER + 1, 0, 0);
-
-            set_encoding_option(g_selectedEncodingOption);
-            set_output_format(g_selectedFormat);
-
-            DWORD exceptionCode = 0;
-            int result = TranscodeWithExceptionHandling(3, argv, &exceptionCode);
-
-            if (exceptionCode != 0) {
-                std::wstring name;
-                switch (exceptionCode) {
-                case 0xC0000005: name = L"ACCESS VIOLATION"; break;
-                case 0xC0000094: name = L"DIVISION BY ZERO"; break;
-                case 0xC000001D: name = L"ILLEGAL INSTRUCTION"; break;
-                case 0xC00000FD: name = L"STACK OVERFLOW"; break;
-                case 0xC0000409: name = L"BUFFER OVERRUN"; break;
-                default: name = L"UNKNOWN EXCEPTION"; break;
+                if (exceptionCode != 0) {
+                    std::wstring name;
+                    switch (exceptionCode) {
+                    case 0xC0000005: name = L"ACCESS VIOLATION"; break;
+                    case 0xC0000094: name = L"DIVISION BY ZERO"; break;
+                    case 0xC000001D: name = L"ILLEGAL INSTRUCTION"; break;
+                    case 0xC00000FD: name = L"STACK OVERFLOW"; break;
+                    case 0xC0000409: name = L"BUFFER OVERRUN"; break;
+                    default: name = L"UNKNOWN EXCEPTION"; break;
+                    }
+                    SetStatus(L"✗ CRASHED!\n" + name + L"\nCode: 0x" +
+                        std::to_wstring(exceptionCode) + L"\n\nCheck cheetah.log");
                 }
-                SetStatus(L"✗ CRASHED!\n" + name + L"\nCode: 0x" +
-                    std::to_wstring(exceptionCode) + L"\n\nCheck cheetah.log");
-            }
-            else if (result == 0) {
-                HANDLE hFile = CreateFileW(output_heap->c_str(), GENERIC_READ, FILE_SHARE_READ,
-                    nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
-                if (hFile != INVALID_HANDLE_VALUE) {
-                    LARGE_INTEGER size{};
-                    GetFileSizeEx(hFile, &size);
-                    CloseHandle(hFile);
+                else if (result == 0) {
+                    HANDLE hFile = CreateFileW(output_heap->c_str(), GENERIC_READ, FILE_SHARE_READ,
+                        nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+                    if (hFile != INVALID_HANDLE_VALUE) {
+                        LARGE_INTEGER size{};
+                        GetFileSizeEx(hFile, &size);
+                        CloseHandle(hFile);
 
-                    if (size.QuadPart < 10000)
-                        SetStatus(L"Small file (" + std::to_wstring(size.QuadPart) + L" bytes)");
-                    else
-                        SetStatus(L"Success!\n\n" + *output_heap +
-                            L"\nSize: " + std::to_wstring(size.QuadPart / 1024) + L" KB");
+                        if (size.QuadPart < 10000)
+                            SetStatus(L"Small file (" + std::to_wstring(size.QuadPart) + L" bytes)");
+                        else
+                            SetStatus(L"Success!\n\n" + *output_heap +
+                                L"\nSize: " + std::to_wstring(size.QuadPart / 1024) + L" KB");
+                    }
+                    else {
+                        SetStatus(L"Output file not created");
+                    }
                 }
                 else {
-                    SetStatus(L"Output file not created");
+                    SetStatus(L"Failed (code " + std::to_wstring(result) + L")");
                 }
-            }
-            else {
-                SetStatus(L"Failed (code " + std::to_wstring(result) + L")");
-            }
 
-            {
-                std::lock_guard<std::mutex> lock(g_progressMutex);
-                g_progress.isEncoding = false;
-            }
+                {
+                    std::lock_guard<std::mutex> lock(g_progressMutex);
+                    g_progress.isEncoding = false;
+                }
 
-            if (g_windowAlive) PostMessage(hwnd, WM_USER + 1, 0, 0);
+                if (g_windowAlive) PostMessage(hwnd, WM_USER + 1, 0, 0);
 
-        }).detach();
+            }).detach();
 
-    return 0;
-}
+        return 0;
+    }
 
 
 
@@ -1216,30 +1164,30 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             //    bgDC, 0, 0, SRCCOPY);
 
 
-            int offset = 2;  
+            int offset = 2;
             BitBlt(memDC, -offset, -offset,
-                g_backgroundImg.width - offset  ,
-                g_backgroundImg.height - offset  ,
+                g_backgroundImg.width - offset,
+                g_backgroundImg.height - offset,
                 bgDC, 0, 0, SRCCOPY);
 
 
             SelectObject(bgDC, old);
             DeleteDC(bgDC);
 
-             
+
 
             Graphics graphics(memDC);
-            
-
-            graphics.DrawImage(pImage,int (buttonRect.left + ix1), int (buttonRect.top + iy1), pImage->GetWidth(), pImage->GetHeight());
 
 
-           
+            graphics.DrawImage(pImage, int(buttonRect.left + ix1), int(buttonRect.top + iy1), pImage->GetWidth(), pImage->GetHeight());
+
+
+
             // Draw text to memory DC
             std::wstring text = GetStatus();
-            int glowR = min(222, 125 + glowIntensity *2);
-            int glowG = min(222, 100 + glowIntensity *2 );
-            int glowB = min(222, 25 + glowIntensity *2);
+            int glowR = min(222, 125 + glowIntensity * 2);
+            int glowG = min(222, 100 + glowIntensity * 2);
+            int glowB = min(222, 25 + glowIntensity * 2);
 
             LOGFONTW lf = {};
             lf.lfHeight = 16;
@@ -1257,10 +1205,10 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             RECT textRect = { 191, 314, 340, 513 };//text
             DrawTextW(memDC, text.c_str(), -1, &textRect, DT_CENTER | DT_VCENTER | DT_WORDBREAK);
 
-////////////////////////////////////////
-            
-           // SetTextColor(memDC, RGB(238, 88, 38));
-           // SetBkMode(memDC, TRANSPARENT);
+            ////////////////////////////////////////
+
+                       // SetTextColor(memDC, RGB(238, 88, 38));
+                       // SetBkMode(memDC, TRANSPARENT);
 
             LOGFONTW lf2 = {};
             lf2.lfHeight = 16;
@@ -1283,9 +1231,9 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             SetBkMode(memDC, TRANSPARENT);
             SelectObject(memDC, hOldFont2);
             DeleteObject(hFont2);
-///////////////////////////////////////////////////////////////
+            ///////////////////////////////////////////////////////////////
 
-      
+
 
             if (miniled == 0) {
 
@@ -1306,15 +1254,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
             if (statusled == 0) {
-               
-               graphics.DrawImage(led1,(int) LED1.left , (int)LED1.top , led1->GetWidth(), led1->GetHeight());
 
-               graphics.DrawImage(led2, (int)LED2.left, (int)LED2.top, led2->GetWidth(), led2->GetHeight());
+                graphics.DrawImage(led1, (int)LED1.left, (int)LED1.top, led1->GetWidth(), led1->GetHeight());
 
-               
-            } 
+                graphics.DrawImage(led2, (int)LED2.left, (int)LED2.top, led2->GetWidth(), led2->GetHeight());
+
+
+            }
             else {
-                
+
                 graphics.DrawImage(led2, (int)LED1.left, (int)LED1.top, led1->GetWidth(), led1->GetHeight());
 
                 graphics.DrawImage(led1, (int)LED2.left, (int)LED2.top, led2->GetWidth(), led2->GetHeight());
@@ -1335,7 +1283,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             if (rotationAngle1 >= 360.0f) rotationAngle1 -= 360.0f;
             if (rotationAngle2 >= 360.0f) rotationAngle2 -= 360.0f;
 
-          
+
             if (b1) {
                 DrawRotatedImage(graphics, b1, ROAD1.left, ROAD1.top, rotationAngle1);
             }
@@ -1362,7 +1310,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             if (g_progress.isEncoding) {
                 DrawProgressMeter(memDC, 1, 570, 460, 70);
             }
-             
+
 
             ///////////////////////////////////////////////////////////////////
 
@@ -1411,15 +1359,15 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
             // Move the button randomly
             ix1 = (rand() % 2 == 0) ? 2 : -2;
             iy1 = (rand() % 2 == 0) ? 2 : -2;
-         
 
-             RECT  butt = { buttonRect.left - 2,buttonRect.top - 2,buttonRect.right + 2,buttonRect.bottom + 2 };
-             InvalidateRect(hwnd, &butt, TRUE);
-           
+
+            RECT  butt = { buttonRect.left - 2,buttonRect.top - 2,buttonRect.right + 2,buttonRect.bottom + 2 };
+            InvalidateRect(hwnd, &butt, TRUE);
+
         }
         else {
-           
-            
+
+
         }
 
 
@@ -1449,7 +1397,7 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
                     L"Unknown",
                     L"MP4 (Universal - works everywhere)",
                     L"MKV (High quality archival)",
-                    L"WebM (Web optimized)",
+                    L"WebP (Web optimized)",
                     L"MOV (Apple/editing workflow)"
                 };
 
@@ -1562,7 +1510,7 @@ int APIENTRY wWinMain(HINSTANCE hInstance, HINSTANCE, LPWSTR, int)
         MARGINS margins = { -1, -1, -1, -1 };  // -1 means extend to full window
         DwmExtendFrameIntoClientArea(hwnd, &margins);
 
-     
+
         LONG_PTR style = GetWindowLongPtr(hwnd, GWL_STYLE);
         style &= ~(WS_CAPTION | WS_THICKFRAME | WS_MINIMIZEBOX | WS_MAXIMIZEBOX | WS_SYSMENU);
         SetWindowLongPtr(hwnd, GWL_STYLE, style);
