@@ -24,6 +24,12 @@ https://github.com/user-attachments/assets/e593285b-8c98-4969-ad13-76506906b228
 
 ![2](https://github.com/user-attachments/assets/840087e8-0379-4cfe-a18e-267d0283f025)
 
+ <div class="fallback">
+    Buy ME cofee, 
+    <a href="https://coff.ee/www.nutz.club" target="_blank" rel="noopener">Buy ME cofee</a>.
+  </div>
+
+
 
 
 
