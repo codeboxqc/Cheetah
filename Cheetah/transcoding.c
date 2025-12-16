@@ -1,4 +1,4 @@
-﻿
+
 /*
  * Copyright [2025] [codeboxqc]
  *
@@ -75,13 +75,13 @@ void set_output_format(int format) {
     switch (format) {
     case 1: g_output_format = "mp4"; break;
     case 2: g_output_format = "matroska"; break;
-    case 3: g_output_format = "webm"; break;
+    case 3: g_output_format = "webp"; break;
     case 4: g_output_format = "mov"; break;
     default: g_output_format = "mp4"; break;
     }
 }
 
- 
+
 static int64_t get_time_ms() {
     LARGE_INTEGER frequency, counter;
     QueryPerformanceFrequency(&frequency);
@@ -243,7 +243,7 @@ static int open_input_file(const char* filename)
 
 
 
-//////////////////////////////////////////////// 
+////////////////////////////////////////////////
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////
 ////////////////////////////////////////////////
@@ -514,7 +514,7 @@ static void configure_software_quality(AVCodecContext* enc_ctx, EncodingOption o
 
 
 
- 
+
 
 static int open_output_file(const char* filename)
 {
@@ -1047,7 +1047,7 @@ int transcode_main(int argc, char** argv)
     unsigned int stream_index;
     unsigned int i;
 
-   
+
 
     // Open debug log (Windows secure version)
 #ifdef _WIN32
