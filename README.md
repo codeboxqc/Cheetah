@@ -13,6 +13,20 @@
 A fast, animated, hardware-accelerated video converter for Windows with a unique visual interface.
 
 
+ 
+
+
+https://github.com/user-attachments/assets/e593285b-8c98-4969-ad13-76506906b228
+
+
+
+ ![1](https://github.com/user-attachments/assets/75bcbe9b-adbe-4163-b472-a5cd943a9ec2)
+
+![2](https://github.com/user-attachments/assets/840087e8-0379-4cfe-a18e-267d0283f025)
+
+
+
+
 ## 📜 GitHub/GPL Compliance Verification
 
 This project uses a **verified GPLv3-compliant FFmpeg configuration** ensuring safe distribution on GitHub.
@@ -27,7 +41,7 @@ ffmpeg -L | findstr "nonfree"           # Returns empty ✓
 ffmpeg -buildconf | findstr "gpl"       # Shows --enable-gpl ✓
 ffmpeg -encoders | findstr "libfdk_aac" # Returns empty ✓
 
-![2](https://github.com/user-attachments/assets/eaf9a62d-9ebf-4d36-b373-ef367a2d7a68)
+ 
 
 
 
@@ -40,7 +54,7 @@ ffmpeg -encoders | findstr "libfdk_aac" # Returns empty ✓
 - **License-Safe** - GPLv3 compliant, safe for public redistribution
 
 - 
-![1](https://github.com/user-attachments/assets/622c551e-e73c-44e8-a463-890241672df7)
+ 
  
 
 ### 📁 Supported Formats
@@ -50,7 +64,7 @@ ffmpeg -encoders | findstr "libfdk_aac" # Returns empty ✓
 
 - 
 
-https://github.com/user-attachments/assets/c1870619-0598-464f-bedc-dda0c4a6bbed
+ 
 
 
 
