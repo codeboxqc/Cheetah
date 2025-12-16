@@ -268,7 +268,13 @@ static int configure_video_encoder(AVCodecContext* enc_ctx, AVCodecContext* dec_
     log_debug("configure_video_encoder: Starting...");
 
     // Find encoder based on profile
-    if (g_encoding_option == ENCODE_H265_ARCHIVE) {
+    if (strcmp(g_output_format, "webp") == 0) {
+        encoder = avcodec_find_encoder_by_name("libwebp");
+        if (encoder) {
+            snprintf(msg, sizeof(msg), "Found WebP encoder: %s", encoder->name);
+            log_debug(msg);
+        }
+    } else if (g_encoding_option == ENCODE_H265_ARCHIVE) {
         const char* h265_encoders[] = { "hevc_nvenc", "hevc_amf", "hevc_qsv", "libx265", NULL };
         for (int j = 0; h265_encoders[j]; j++) {
             encoder = avcodec_find_encoder_by_name(h265_encoders[j]);
@@ -333,7 +339,11 @@ static int configure_video_encoder(AVCodecContext* enc_ctx, AVCodecContext* dec_
     }
 
     // FIXED: Call quality configuration functions with correct signature (only 2 params)
-    if (strstr(encoder->name, "nvenc")) {
+    if (strcmp(encoder->name, "libwebp") == 0) {
+        av_opt_set_int(enc_ctx->priv_data, "lossless", 0, 0);
+        av_opt_set_int(enc_ctx->priv_data, "quality", 75, 0);
+    }
+    else if (strstr(encoder->name, "nvenc")) {
         configure_nvenc_quality(enc_ctx, g_encoding_option);
     }
     else if (strstr(encoder->name, "amf")) {
@@ -529,7 +539,7 @@ static int open_output_file(const char* filename)
     log_debug("Opening output file...");
 
     ofmt_ctx = NULL;
-    avformat_alloc_output_context2(&ofmt_ctx, NULL, NULL, filename);
+    avformat_alloc_output_context2(&ofmt_ctx, NULL, g_output_format, filename);
     if (!ofmt_ctx) {
         av_log(NULL, AV_LOG_ERROR, "Could not create output context\n");
         return AVERROR_UNKNOWN;
@@ -580,6 +590,10 @@ static int open_output_file(const char* filename)
             stream_ctx[i].enc_ctx = enc_ctx;
         }
         else if (dec_ctx->codec_type == AVMEDIA_TYPE_AUDIO) {
+            if (strcmp(g_output_format, "webp") == 0) {
+                log_debug("Skipping audio stream for WebP output");
+                continue;
+            }
             encoder = avcodec_find_encoder(AV_CODEC_ID_AAC);
             if (!encoder) {
                 av_log(NULL, AV_LOG_ERROR, "AAC encoder not found\n");
