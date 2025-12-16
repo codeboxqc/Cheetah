@@ -546,9 +546,6 @@ static int open_output_file(const char* filename)
         return AVERROR_UNKNOWN;
     }
 
-    if (ofmt_ctx->oformat->flags & AVFMT_GLOBALHEADER)
-        ofmt_ctx->flags |= AVFMT_FLAG_GLOBAL_HEADER;
-
 
 
 
