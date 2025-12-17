@@ -1,4 +1,4 @@
- # 🐆 Cheetah Video Converter
+ # 🐆 🐆🐆 Cheetah Video Converter🐆🐆🐆
 
 ![Version](https://img.shields.io/badge/version-1.0-blue.svg)
 ![License: GPL v3](https://img.shields.io/badge/License-GPL%20v3-blue.svg)
